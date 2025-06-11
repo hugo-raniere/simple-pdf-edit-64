@@ -21,7 +21,7 @@ export interface PDFDocument {
 }
 
 export const usePDFEditor = () => {
-  const [document, setDocument] = useState<PDFDocument | null>(null);
+  const [pdfDocument, setPdfDocument] = useState<PDFDocument | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [history, setHistory] = useState<PDFTextElement[][]>([]);
@@ -81,71 +81,71 @@ export const usePDFEditor = () => {
       }
     ];
 
-    const pdfDoc: PDFDocument = {
+    const newPdfDoc: PDFDocument = {
       file,
       name: file.name,
       pages: 1,
       textElements: mockTextElements
     };
 
-    setDocument(pdfDoc);
+    setPdfDocument(newPdfDoc);
     setHistory([mockTextElements]);
     setHistoryIndex(0);
     setIsLoading(false);
   }, []);
 
   const updateTextElement = useCallback((id: string, newText: string) => {
-    if (!document) return;
+    if (!pdfDocument) return;
 
-    const newTextElements = document.textElements.map(element =>
+    const newTextElements = pdfDocument.textElements.map(element =>
       element.id === id ? { ...element, text: newText } : element
     );
 
-    const newDocument = { ...document, textElements: newTextElements };
-    setDocument(newDocument);
+    const newDocument = { ...pdfDocument, textElements: newTextElements };
+    setPdfDocument(newDocument);
 
     // Adicionar ao histórico
     const newHistory = history.slice(0, historyIndex + 1);
     newHistory.push(newTextElements);
     setHistory(newHistory);
     setHistoryIndex(newHistory.length - 1);
-  }, [document, history, historyIndex]);
+  }, [pdfDocument, history, historyIndex]);
 
   const undo = useCallback(() => {
-    if (historyIndex > 0 && document) {
+    if (historyIndex > 0 && pdfDocument) {
       const newIndex = historyIndex - 1;
       const newTextElements = history[newIndex];
-      setDocument({ ...document, textElements: newTextElements });
+      setPdfDocument({ ...pdfDocument, textElements: newTextElements });
       setHistoryIndex(newIndex);
     }
-  }, [document, history, historyIndex]);
+  }, [pdfDocument, history, historyIndex]);
 
   const redo = useCallback(() => {
-    if (historyIndex < history.length - 1 && document) {
+    if (historyIndex < history.length - 1 && pdfDocument) {
       const newIndex = historyIndex + 1;
       const newTextElements = history[newIndex];
-      setDocument({ ...document, textElements: newTextElements });
+      setPdfDocument({ ...pdfDocument, textElements: newTextElements });
       setHistoryIndex(newIndex);
     }
-  }, [document, history, historyIndex]);
+  }, [pdfDocument, history, historyIndex]);
 
   const downloadPDF = useCallback(async () => {
-    if (!document) return;
+    if (!pdfDocument) return;
 
     // Simula a geração do PDF modificado
     const blob = new Blob(['PDF modificado simulado'], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = document.name.replace('.pdf', '_editado.pdf');
+    a.download = pdfDocument.name.replace('.pdf', '_editado.pdf');
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-  }, [document]);
+  }, [pdfDocument]);
 
   return {
-    document,
+    document: pdfDocument,
     isLoading,
     currentPage,
     setCurrentPage,
