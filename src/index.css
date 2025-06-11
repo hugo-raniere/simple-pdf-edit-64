@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -98,62 +99,35 @@
   }
 }
 
-.pdf-text-layer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
+/* React PDF styles */
+.react-pdf__Document {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+.react-pdf__Page {
+  max-width: calc(100vw - 2em);
+  max-height: calc(100vh - 2em);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  margin-bottom: 1em;
+}
+
+.react-pdf__Page__canvas {
+  max-width: 100%;
+  height: auto !important;
+}
+
+.react-pdf__Page__textContent {
+  display: none !important;
+}
+
+.react-pdf__Page__annotations {
+  display: none !important;
+}
+
+/* PDF editing styles */
 .pdf-text-editable {
-  pointer-events: auto;
-  background: rgba(59, 130, 246, 0.1);
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  border-radius: 2px;
-  padding: 2px;
-  transition: all 0.2s ease;
-}
-
-.pdf-text-editable:hover {
-  background: rgba(59, 130, 246, 0.2);
-  border-color: rgba(59, 130, 246, 0.5);
-}
-
-.pdf-text-editable:focus {
-  outline: none;
-  background: rgba(59, 130, 246, 0.15);
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-}
-
-/* React Resizable styles */
-.react-resizable {
-  position: relative;
-}
-
-.react-resizable-handle {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  background-repeat: no-repeat;
-  background-origin: content-box;
-  box-sizing: border-box;
-  background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNiIgaGVpZ2h0PSI2IiB2aWV3Qm94PSIwIDAgNiA2IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8ZG90cyBmaWxsPSIjOTk5IiBkPSJtMS41IDFoMXYxaC0xem0yIDBoMXYxaC0xem0wIDJoMXYxaC0xem0tMiAwaDFoMXoiLz4KPHN2Zz4K');
-  background-position: bottom right;
-  padding: 0 3px 3px 0;
-}
-
-.react-resizable-handle-se {
-  bottom: 0;
-  right: 0;
-  cursor: se-resize;
-}
-
-/* PDF Text editing styles */
-.pdf-text-editable {
-  pointer-events: auto;
   transition: all 0.2s ease;
 }
 
@@ -167,11 +141,6 @@
   background: rgba(59, 130, 246, 0.15) !important;
   border-color: var(--primary) !important;
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-}
-
-/* Drag handles */
-.drag-handle {
-  cursor: move !important;
 }
 
 /* Smooth animations */
