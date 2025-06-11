@@ -14,7 +14,7 @@ interface PDFViewerProps {
 }
 
 export const PDFViewer: React.FC<PDFViewerProps> = ({
-  document,
+  document: pdfDocument,
   children,
   onPageRender,
   scale
@@ -25,10 +25,10 @@ export const PDFViewer: React.FC<PDFViewerProps> = ({
 
   useEffect(() => {
     const loadPDF = async () => {
-      if (!document.pdfData) return;
+      if (!pdfDocument.pdfData) return;
 
       try {
-        const pdf = await pdfjsLib.getDocument({ data: document.pdfData }).promise;
+        const pdf = await pdfjsLib.getDocument({ data: pdfDocument.pdfData }).promise;
         setPdfDoc(pdf);
         setIsLoading(false);
       } catch (error) {
@@ -38,7 +38,7 @@ export const PDFViewer: React.FC<PDFViewerProps> = ({
     };
 
     loadPDF();
-  }, [document.pdfData]);
+  }, [pdfDocument.pdfData]);
 
   const renderPage = useCallback(async (pageNumber: number) => {
     if (!pdfDoc) return;
@@ -47,7 +47,7 @@ export const PDFViewer: React.FC<PDFViewerProps> = ({
       const page = await pdfDoc.getPage(pageNumber);
       const viewport = page.getViewport({ scale });
       
-      const canvas = document.createElement('canvas');
+      const canvas = window.document.createElement('canvas');
       const context = canvas.getContext('2d');
       
       canvas.height = viewport.height;

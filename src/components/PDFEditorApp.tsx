@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { PDFViewer } from './pdf/PDFViewer';
@@ -14,7 +13,7 @@ interface PDFEditorAppProps {
 
 export const PDFEditorApp: React.FC<PDFEditorAppProps> = ({ document: initialDocument }) => {
   const {
-    document,
+    document: pdfDocument,
     updateTextElement,
     addTextElement,
     deleteTextElement,
@@ -88,12 +87,12 @@ export const PDFEditorApp: React.FC<PDFEditorAppProps> = ({ document: initialDoc
       // Aqui seria a integração com pdf-lib para gerar o PDF modificado
       const blob = new Blob(['PDF modificado simulado'], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = window.document.createElement('a');
       a.href = url;
-      a.download = document.name.replace('.pdf', '_editado.pdf');
-      document.body.appendChild(a);
+      a.download = pdfDocument.name.replace('.pdf', '_editado.pdf');
+      window.document.body.appendChild(a);
       a.click();
-      document.body.removeChild(a);
+      window.document.body.removeChild(a);
       URL.revokeObjectURL(url);
       
       toast.success('PDF exportado com sucesso!');
@@ -101,12 +100,12 @@ export const PDFEditorApp: React.FC<PDFEditorAppProps> = ({ document: initialDoc
       console.error('Erro ao exportar:', error);
       toast.error('Erro ao exportar PDF');
     }
-  }, [document.name]);
+  }, [pdfDocument.name]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <TopBar
-        document={document}
+        document={pdfDocument}
         onSave={handleSave}
         onExport={handleExport}
         onUndo={undo}
@@ -126,7 +125,7 @@ export const PDFEditorApp: React.FC<PDFEditorAppProps> = ({ document: initialDoc
       <main className="flex-1 overflow-auto">
         <div className="max-w-4xl mx-auto p-8" ref={containerRef}>
           <div className="space-y-8">
-            {Array.from({ length: document.pages }, (_, index) => {
+            {Array.from({ length: pdfDocument.pages }, (_, index) => {
               const pageNumber = index + 1;
               const canvas = pageCanvases.get(pageNumber);
               
@@ -152,7 +151,7 @@ export const PDFEditorApp: React.FC<PDFEditorAppProps> = ({ document: initialDoc
                       
                       {/* Overlay para edição de texto */}
                       <TextOverlay
-                        textElements={document.textElements}
+                        textElements={pdfDocument.textElements}
                         pageNumber={pageNumber}
                         pageWidth={canvas.width}
                         pageHeight={canvas.height}
@@ -176,7 +175,7 @@ export const PDFEditorApp: React.FC<PDFEditorAppProps> = ({ document: initialDoc
       </main>
 
       <PDFViewer
-        document={document}
+        document={pdfDocument}
         onPageRender={handlePageRender}
         scale={scale}
       >

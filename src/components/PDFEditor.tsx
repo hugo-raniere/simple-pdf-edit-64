@@ -1,9 +1,8 @@
-
 import React, { useCallback, useEffect } from 'react';
 import { Download, Undo, Redo, FileText, ChevronLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { PDFDocument, PDFTextElement } from '@/hooks/usePDFEditor';
+import { PDFDocument, PDFTextElement } from '@/types/pdf';
 
 interface PDFEditorProps {
   document: PDFDocument;
