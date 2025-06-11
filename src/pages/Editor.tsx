@@ -1,12 +1,11 @@
 
-import React from 'react';
-import { PDFEditorApp } from '@/components/PDFEditorApp';
-import { usePDFEditor } from '@/hooks/usePDFEditor';
+import React, { useEffect } from 'react';
+import { PDFEditorSimple } from '@/components/PDFEditorSimple';
+import { usePDFContext } from '@/contexts/PDFContext';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 
 const Editor = () => {
-  const { document } = usePDFEditor();
+  const { document } = usePDFContext();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,10 +15,15 @@ const Editor = () => {
   }, [document, navigate]);
 
   if (!document) {
-    return null;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <span className="ml-2 text-muted-foreground">Carregando...</span>
+      </div>
+    );
   }
 
-  return <PDFEditorApp document={document} />;
+  return <PDFEditorSimple />;
 };
 
 export default Editor;
