@@ -1,27 +1,7 @@
+
 import { useState, useCallback } from 'react';
 import * as pdfjsLib from 'pdfjs-dist';
-
-export interface PDFTextElement {
-  id: string;
-  text: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  fontSize: number;
-  fontFamily: string;
-  page: number;
-  isNew?: boolean;
-  color?: string;
-}
-
-export interface PDFDocument {
-  file: File;
-  name: string;
-  pages: number;
-  textElements: PDFTextElement[];
-  pdfData?: ArrayBuffer;
-}
+import { PDFDocument, PDFTextElement } from '@/types/pdf';
 
 export const usePDFEditor = () => {
   const [pdfDocument, setPdfDocument] = useState<PDFDocument | null>(null);
