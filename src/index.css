@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -127,4 +126,66 @@
   background: rgba(59, 130, 246, 0.15);
   border-color: var(--primary);
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+/* React Resizable styles */
+.react-resizable {
+  position: relative;
+}
+
+.react-resizable-handle {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-repeat: no-repeat;
+  background-origin: content-box;
+  box-sizing: border-box;
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNiIgaGVpZ2h0PSI2IiB2aWV3Qm94PSIwIDAgNiA2IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8ZG90cyBmaWxsPSIjOTk5IiBkPSJtMS41IDFoMXYxaC0xem0yIDBoMXYxaC0xem0wIDJoMXYxaC0xem0tMiAwaDFoMXoiLz4KPHN2Zz4K');
+  background-position: bottom right;
+  padding: 0 3px 3px 0;
+}
+
+.react-resizable-handle-se {
+  bottom: 0;
+  right: 0;
+  cursor: se-resize;
+}
+
+/* PDF Text editing styles */
+.pdf-text-editable {
+  pointer-events: auto;
+  transition: all 0.2s ease;
+}
+
+.pdf-text-editable:hover {
+  background: rgba(59, 130, 246, 0.1) !important;
+  border-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+.pdf-text-editable:focus-within {
+  outline: none;
+  background: rgba(59, 130, 246, 0.15) !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+/* Drag handles */
+.drag-handle {
+  cursor: move !important;
+}
+
+/* Smooth animations */
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

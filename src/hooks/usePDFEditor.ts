@@ -1,5 +1,5 @@
-
 import { useState, useCallback } from 'react';
+import * as pdfjsLib from 'pdfjs-dist';
 
 export interface PDFTextElement {
   id: string;
@@ -11,6 +11,8 @@ export interface PDFTextElement {
   fontSize: number;
   fontFamily: string;
   page: number;
+  isNew?: boolean;
+  color?: string;
 }
 
 export interface PDFDocument {
@@ -18,6 +20,7 @@ export interface PDFDocument {
   name: string;
   pages: number;
   textElements: PDFTextElement[];
+  pdfData?: ArrayBuffer;
 }
 
 export const usePDFEditor = () => {
@@ -30,68 +33,80 @@ export const usePDFEditor = () => {
   const uploadPDF = useCallback(async (file: File) => {
     setIsLoading(true);
     
-    // Simula o processamento do PDF
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    // Simula elementos de texto extraídos do PDF
-    const mockTextElements: PDFTextElement[] = [
-      {
-        id: '1',
-        text: 'Documento de Exemplo',
-        x: 100,
-        y: 100,
-        width: 200,
-        height: 24,
-        fontSize: 18,
-        fontFamily: 'Arial',
-        page: 1
-      },
-      {
-        id: '2',
-        text: 'Este é um texto editável no PDF.',
-        x: 100,
-        y: 150,
-        width: 300,
-        height: 16,
-        fontSize: 14,
-        fontFamily: 'Arial',
-        page: 1
-      },
-      {
-        id: '3',
-        text: 'Clique em qualquer texto para editar.',
-        x: 100,
-        y: 180,
-        width: 280,
-        height: 16,
-        fontSize: 14,
-        fontFamily: 'Arial',
-        page: 1
-      },
-      {
-        id: '4',
-        text: 'Data: 11/06/2025',
-        x: 400,
-        y: 100,
-        width: 120,
-        height: 16,
-        fontSize: 12,
-        fontFamily: 'Arial',
-        page: 1
-      }
-    ];
+    try {
+      // Ler arquivo como ArrayBuffer
+      const arrayBuffer = await file.arrayBuffer();
+      
+      // Carregar PDF com pdf.js para extrair informações
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      
+      // Extrair texto de todas as páginas (simulado por enquanto)
+      const mockTextElements: PDFTextElement[] = [
+        {
+          id: '1',
+          text: 'Documento de Exemplo',
+          x: 100,
+          y: 100,
+          width: 200,
+          height: 24,
+          fontSize: 18,
+          fontFamily: 'Inter',
+          page: 1,
+          isNew: false
+        },
+        {
+          id: '2',
+          text: 'Este é um texto editável no PDF.',
+          x: 100,
+          y: 150,
+          width: 300,
+          height: 16,
+          fontSize: 14,
+          fontFamily: 'Inter',
+          page: 1,
+          isNew: false
+        },
+        {
+          id: '3',
+          text: 'Clique em qualquer texto para editar.',
+          x: 100,
+          y: 180,
+          width: 280,
+          height: 16,
+          fontSize: 14,
+          fontFamily: 'Inter',
+          page: 1,
+          isNew: false
+        },
+        {
+          id: '4',
+          text: 'Data: 11/06/2025',
+          x: 400,
+          y: 100,
+          width: 120,
+          height: 16,
+          fontSize: 12,
+          fontFamily: 'Inter',
+          page: 1,
+          isNew: false
+        }
+      ];
 
-    const newPdfDoc: PDFDocument = {
-      file,
-      name: file.name,
-      pages: 1,
-      textElements: mockTextElements
-    };
+      const newPdfDoc: PDFDocument = {
+        file,
+        name: file.name,
+        pages: pdf.numPages,
+        textElements: mockTextElements,
+        pdfData: arrayBuffer
+      };
 
-    setPdfDocument(newPdfDoc);
-    setHistory([mockTextElements]);
-    setHistoryIndex(0);
-    setIsLoading(false);
+      setPdfDocument(newPdfDoc);
+    } catch (error) {
+      console.error('Erro ao processar PDF:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
   const updateTextElement = useCallback((id: string, newText: string) => {
@@ -150,11 +165,18 @@ export const usePDFEditor = () => {
     currentPage,
     setCurrentPage,
     uploadPDF,
-    updateTextElement,
-    undo,
-    redo,
-    downloadPDF,
-    canUndo: historyIndex > 0,
-    canRedo: historyIndex < history.length - 1
+    downloadPDF: async () => {
+      if (!pdfDocument) return;
+      
+      const blob = new Blob(['PDF modificado simulado'], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = pdfDocument.name.replace('.pdf', '_editado.pdf');
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
   };
 };

@@ -1,20 +1,12 @@
 
 import React from 'react';
-import { PDFEditor } from '@/components/PDFEditor';
+import { PDFEditorApp } from '@/components/PDFEditorApp';
 import { usePDFEditor } from '@/hooks/usePDFEditor';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
 const Editor = () => {
-  const {
-    document,
-    updateTextElement,
-    downloadPDF,
-    undo,
-    redo,
-    canUndo,
-    canRedo
-  } = usePDFEditor();
+  const { document } = usePDFEditor();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,27 +19,7 @@ const Editor = () => {
     return null;
   }
 
-  const handleDownload = async () => {
-    await downloadPDF();
-    navigate('/complete');
-  };
-
-  const handleBack = () => {
-    navigate('/');
-  };
-
-  return (
-    <PDFEditor
-      document={document}
-      onUpdateText={updateTextElement}
-      onDownload={handleDownload}
-      onUndo={undo}
-      onRedo={redo}
-      onBack={handleBack}
-      canUndo={canUndo}
-      canRedo={canRedo}
-    />
-  );
+  return <PDFEditorApp document={document} />;
 };
 
 export default Editor;
